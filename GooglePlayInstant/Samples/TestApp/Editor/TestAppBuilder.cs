@@ -26,8 +26,7 @@ namespace GooglePlayInstant.Samples.TestApp.Editor
     {
         private const string BundleIdentifier = "com.google.android.instantapps.samples.unity.testapp";
         private const string ApkPath = "Assets/TestApp.apk";
-        private const string ScenesPath = "Assets/TestApp/Scenes/";
-        private static readonly string[] SceneFilesToTest = {"TestScene.unity"};
+        private static readonly string[] TestScenePaths = {"Assets/TestApp/Scenes/TestScene.unity"};
 
         public static void Build()
         {
@@ -44,10 +43,7 @@ namespace GooglePlayInstant.Samples.TestApp.Editor
                 policy.ChangeState();
             }
 
-            var testScenePaths = SceneFilesToTest
-                .Select(filename => Path.Combine(ScenesPath, filename))
-                .ToArray();
-            PlayInstantBuildConfiguration.SaveConfiguration("", testScenePaths, "");
+            PlayInstantBuildConfiguration.SaveConfiguration("", TestScenePaths, "");
             PlayInstantBuildConfiguration.SetInstantBuildType();
             PlayerSettings.applicationIdentifier = BundleIdentifier;
         }
