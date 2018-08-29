@@ -12,11 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System;
-using UnityEngine;
-using UnityEditor;
+using System.IO;
 using System.Linq;
 using GooglePlayInstant.Editor;
+using UnityEditor;
 
 namespace GooglePlayInstant.Samples.TestApp.Editor
 {
@@ -25,9 +24,9 @@ namespace GooglePlayInstant.Samples.TestApp.Editor
     /// </summary>
     public static class TestAppBuilder
     {
-        public const string BundleIdentifier = "com.google.play.playInstantTest";
-        public const string ScenesPath = "Assets/TestApp/Scenes/";
-        public static readonly string[] SceneFilesToTest = new string[] { "TestScene.unity" };
+        private const string BundleIdentifier = "com.google.android.instantapps.samples.unity.testapp";
+        private const string ScenesPath = "Assets/TestApp/Scenes/";
+        private static readonly string[] SceneFilesToTest = {"TestScene.unity"};
 
         public static void BuildAndRunTestProject()
         {
@@ -44,7 +43,7 @@ namespace GooglePlayInstant.Samples.TestApp.Editor
             }
 
             var testScenePaths = SceneFilesToTest
-                .Select(filename => System.IO.Path.Combine(ScenesPath, filename))
+                .Select(filename => Path.Combine(ScenesPath, filename))
                 .ToArray();
             PlayInstantBuildConfiguration.SaveConfiguration("", testScenePaths, "");
             PlayInstantBuildConfiguration.SetInstantBuildType();
