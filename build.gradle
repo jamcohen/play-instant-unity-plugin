@@ -119,6 +119,7 @@ task buildTestApp {
     doLast {
         def argv = [
             '-batchmode',
+            '-noGraphics',
             '-projectPath',
             buildPath,
             '-logFile',
