@@ -21,7 +21,7 @@ namespace GooglePlayInstant.Samples.TestApp
     /// </summary>
     public class TestApp : MonoBehaviour
     {
-        private const string CookieEmoticon = "\uD83C\uDF6A";
+        private const string CookiePrefix = "test-cookie";
         private string _storedCookie;
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace GooglePlayInstant.Samples.TestApp
         {
             //Write a random value so WriteCookie will always change the cookie
             var guid = Random.Range(int.MinValue, int.MaxValue);
-            _storedCookie = string.Format("{0}:{1}", guid, CookieEmoticon);
+            _storedCookie = string.Format("{0}:{1}", guid, CookiePrefix);
             CookieApi.SetInstantAppCookie(_storedCookie);
             Debug.LogFormat("Wrote a cookie: {0}", _storedCookie);
         }
