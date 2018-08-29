@@ -16,17 +16,17 @@ using System;
 using UnityEngine;
 using UnityEditor;
 using System.Linq;
-using GooglePlayInstant;
+using GooglePlayInstant.Editor;
 
-namespace GooglePlayInstant.Editor
+namespace GooglePlayInstant.Samples.TestApp.Editor
 {
     /// <summary>
     /// Exposes build and run functionality to the command line for testing.
     /// </summary>
-    public static class AndroidInstantTest
+    public static class TestAppBuilder
     {
         public const string BundleIdentifier = "com.google.play.playInstantTest";
-        public const string ScenesPath = "Assets/TestProject/scenes/";
+        public const string ScenesPath = "Assets/TestApp/Scenes/";
         public static readonly string[] SceneFilesToTest = new string[] { "TestScene.unity" };
 
         public static void BuildAndRunTestProject()

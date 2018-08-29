@@ -106,14 +106,14 @@ task exportSampleSphereBlast {
 
 task buildAndRunInstantAppTest {
     description 'Creates the instant app test project, then builds and runs in instant mode'
-    def buildAndRunFunction = 'GooglePlayInstant.Editor.AndroidInstantTest.BuildAndRunTestProject'
-    def buildPath = "${playInstantBuildPath}/testproject"
-    def logFile = file("testproject.log").getPath()
+    def buildAndRunFunction = 'GooglePlayInstant.Samples.TestApp.Editor.TestAppBuilder.BuildAndRunTestProject'
+    def buildPath = "${playInstantBuildPath}/testapp"
+    def logFile = file("testapp.log").getPath()
     doFirst {
         copyFiles(buildPath, [])
         copy {
-            from 'GooglePlayInstant/Samples/TestProject'
-            into "${buildPath}/Assets/TestProject"
+            from 'GooglePlayInstant/Samples/TestApp'
+            into "${buildPath}/Assets/TestApp"
         }
     }
     doLast {
