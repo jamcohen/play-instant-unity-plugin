@@ -127,7 +127,7 @@ task buildTestApp {
             'Android',
             '-executeMethod',
             buildFunction,
-            'quit'
+            '-quit'
         ]
         exec {
             executable unityExe
