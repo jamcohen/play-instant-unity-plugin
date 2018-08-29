@@ -104,9 +104,9 @@ task exportSampleSphereBlast {
     }
 }
 
-task buildAndRunInstantAppTest {
-    description 'Creates the instant app test project, then builds and runs in instant mode'
-    def buildAndRunFunction = 'GooglePlayInstant.Samples.TestApp.Editor.TestAppBuilder.BuildAndRunTestProject'
+task buildTestApp {
+    description 'Creates the instant app test project, then builds a test app'
+    def buildAndRunFunction = 'GooglePlayInstant.Samples.TestApp.Editor.TestAppBuilder.Build'
     def buildPath = "${playInstantBuildPath}/testapp"
     def logFile = file("testapp.log").getPath()
     doFirst {

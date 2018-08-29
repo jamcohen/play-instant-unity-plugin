@@ -25,13 +25,15 @@ namespace GooglePlayInstant.Samples.TestApp.Editor
     public static class TestAppBuilder
     {
         private const string BundleIdentifier = "com.google.android.instantapps.samples.unity.testapp";
+        private const string ApkPath = "Assets/TestApp.apk";
         private const string ScenesPath = "Assets/TestApp/Scenes/";
         private static readonly string[] SceneFilesToTest = {"TestScene.unity"};
 
-        public static void BuildAndRunTestProject()
+        public static void Build()
         {
             ConfigureProject();
-            PlayInstantRunner.BuildAndRun();
+            var buildPlayerOptions = PlayInstantBuilder.CreateBuildPlayerOptions(ApkPath, BuildOptions.None);
+            PlayInstantBuilder.BuildAndSign(buildPlayerOptions);
         }
 
         private static void ConfigureProject()
