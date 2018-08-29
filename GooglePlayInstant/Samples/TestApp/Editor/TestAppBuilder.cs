@@ -25,7 +25,7 @@ namespace GooglePlayInstant.Samples.TestApp.Editor
     public static class TestAppBuilder
     {
         private const string BundleIdentifier = "com.google.android.instantapps.samples.unity.testapp";
-        private const string ApkPath = "Assets/TestApp.apk";
+        private const string ApkPath = "Assets/../TestApp.apk";
         private static readonly string[] TestScenePaths = {"Assets/TestApp/Scenes/TestScene.unity"};
 
         public static void Build()
