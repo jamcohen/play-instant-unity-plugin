@@ -41,6 +41,7 @@ namespace GooglePlayInstant.Samples.TestApp
         /// </summary>
         public void BtnEvt_ReadCookie()
         {
+            // TODO: Currently reading the cookie from the instant app. Prefer to read it from installed app.
             var readCookie = CookieApi.GetInstantAppCookie();
             Debug.LogFormat("Read a cookie: {0}", readCookie);
             if (string.Equals(readCookie, _storedCookie))
@@ -55,6 +56,7 @@ namespace GooglePlayInstant.Samples.TestApp
         
         public void BtnEvt_ShowInstallPrompt()
         {
+            // TODO: test all aspects of this API
             InstallLauncher.ShowInstallPrompt();
         }
     }
