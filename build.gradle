@@ -110,7 +110,7 @@ task buildAndRunInstantAppTest {
     def buildPath = "${playInstantBuildPath}/testapp"
     def logFile = file("testapp.log").getPath()
     doFirst {
-        copyFiles(buildPath, [])
+        copyFiles(buildPath, ['Tests'])
         copy {
             from 'GooglePlayInstant/Samples/TestApp'
             into "${buildPath}/Assets/TestApp"
