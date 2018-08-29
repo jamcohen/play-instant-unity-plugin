@@ -20,7 +20,7 @@ using UnityEditor;
 namespace GooglePlayInstant.Samples.TestApp.Editor
 {
     /// <summary>
-    /// Exposes build and run functionality to the command line for testing.
+    /// Exposes build functionality to the command line for testing.
     /// </summary>
     public static class TestAppBuilder
     {
