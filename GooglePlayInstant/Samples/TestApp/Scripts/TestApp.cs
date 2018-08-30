@@ -30,6 +30,7 @@ namespace GooglePlayInstant.Samples.TestApp
         public void ButtonEventWriteCookie()
         {
             //Write a random value so WriteCookie will always change the cookie
+            // Note: System.Guid is unavailable with micro mscorlib.
             var guid = Random.Range(int.MinValue, int.MaxValue);
             _storedCookie = string.Format("{0}:{1}", guid, CookiePrefix);
             Debug.LogFormat("Attempting to write cookie: {0}", _storedCookie);
