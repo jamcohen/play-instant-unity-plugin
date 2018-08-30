@@ -27,7 +27,7 @@ namespace GooglePlayInstant.Samples.TestApp
         /// <summary>
         /// Sets the instant app cookie to a unique string
         /// </summary>
-        public void WriteCookie()
+        public void ButtonEventWriteCookie()
         {
             //Write a random value so WriteCookie will always change the cookie
             var guid = Random.Range(int.MinValue, int.MaxValue);
@@ -46,7 +46,7 @@ namespace GooglePlayInstant.Samples.TestApp
         /// <summary>
         /// Reads the cookie and verifies if it matches the one we stored
         /// </summary>
-        public void ReadCookie()
+        public void ButtonEventReadCookie()
         {
             // TODO: Currently reading the cookie from the instant app. Prefer to read it from installed app.
             var readCookie = CookieApi.GetInstantAppCookie();
@@ -61,7 +61,7 @@ namespace GooglePlayInstant.Samples.TestApp
             }
         }
         
-        public void ShowInstallPrompt()
+        public void ButtonEventShowInstallPrompt()
         {
             // TODO: test all aspects of this API
             InstallLauncher.ShowInstallPrompt();
