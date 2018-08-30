@@ -32,6 +32,7 @@ namespace GooglePlayInstant.Samples.TestApp
             //Write a random value so WriteCookie will always change the cookie
             var guid = Random.Range(int.MinValue, int.MaxValue);
             _storedCookie = string.Format("{0}:{1}", guid, CookiePrefix);
+            Debug.LogFormat("Attempting to write cookie: {0}", _storedCookie);
             if (CookieApi.SetInstantAppCookie(_storedCookie))
             {
                 Debug.LogFormat("Successfully wrote cookie");
@@ -49,7 +50,7 @@ namespace GooglePlayInstant.Samples.TestApp
         {
             // TODO: Currently reading the cookie from the instant app. Prefer to read it from installed app.
             var readCookie = CookieApi.GetInstantAppCookie();
-            Debug.Log("Successfully read cookie");
+            Debug.LogFormat("Successfully read cookie: {0}", readCookie);
             if (string.Equals(readCookie, _storedCookie))
             {
                 Debug.Log("Read cookie matches the value we stored");
