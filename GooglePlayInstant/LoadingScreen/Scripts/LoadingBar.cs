@@ -109,5 +109,6 @@ namespace GooglePlayInstant.LoadingScreen
                 SetProgress(finalFillProportion);
             }
         }
+
     }
 }
