@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Runtime.Remoting.Messaging;
 using UnityEngine;
 
 namespace GooglePlayInstant.SplitInstall
@@ -24,21 +23,22 @@ namespace GooglePlayInstant.SplitInstall
     {
         private readonly string _splitName;
         private readonly SplitInstallManager _splitInstallManager;
-        
+
         public SplitInstallProvider(string splitName)
         {
             _splitName = splitName;
             _splitInstallManager = new SplitInstallManager();
         }
-        
-        public AsyncOperation StartDownload()
+
+        public IProgressiveTask StartDownload()
         {
-            _splitInstallManager.StartModuleInstall(_splitName);
+            var stateUpdatedListener = _splitInstallManager.StartModuleInstall(_splitName);
+            return new SplitInstallTask(stateUpdatedListener);
         }
 
         public bool IsError()
         {
-            return true;
+            return false;
         }
 
         public string GetError()
@@ -49,6 +49,39 @@ namespace GooglePlayInstant.SplitInstall
         public AssetBundle GetAssetBundle()
         {
             return null;
+        }
+    }
+
+    public class SplitInstallTask : IProgressiveTask
+    {
+        private float _progress;
+        private bool _isDone;
+        private const int INSTALLED = 5;
+
+        public SplitInstallTask(SplitInstallStateUpdatedListener listener)
+        {
+            listener.OnStateUpdateEvent += UpdateProgress;
+        }
+
+        private void UpdateProgress(SplitInstallSessionState state)
+        {
+            Debug.Log("Error: " + state.ErrorCode);
+            Debug.Log("bytes downloaded: " + state.BytesDownloaded);
+            Debug.Log("total downloaded: " + state.TotalBytesToDownload);
+            Debug.Log("status: " + state.Status);
+            _progress = state.BytesDownloaded / (float) state.TotalBytesToDownload;
+            _isDone = state.Status == INSTALLED;
+            _progress += 0.01f;
+        }
+
+        public bool IsDone()
+        {
+            return _isDone;
+        }
+
+        public float GetProgress()
+        {
+            return _progress;
         }
     }
 }

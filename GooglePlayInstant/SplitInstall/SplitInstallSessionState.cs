@@ -16,39 +16,32 @@
 
 using System;
 using System.Text;
-using  System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace GooglePlayInstant.SplitInstall
 {
-
     public class SplitInstallSessionState
     {
         private AndroidJavaObject _sessionState;
 
         public long BytesDownloaded
         {
-            get
-            {
-                return _sessionState.Call<long>("bytesDownloaded");
-            }
+            get { return _sessionState.Call<long>("bytesDownloaded"); }
         }
-        
+
         public int ErrorCode
         {
-            get
-            {
-                return _sessionState.Call<int>("errorCode");
-            }
+            get { return _sessionState.Call<int>("errorCode"); }
         }
-        
+
         public List<string> ModuleNames
         {
             get
             {
                 var javaList = _sessionState.Call<AndroidJavaObject>("bytesDownloaded");
                 int count = javaList.Call<int>("size");
-                
+
                 var results = new List<string>();
                 for (int i = 0; i < count; i++)
                 {
@@ -58,42 +51,30 @@ namespace GooglePlayInstant.SplitInstall
                 return results;
             }
         }
-        
+
         // Returns a PendingIntent object.
         public AndroidJavaObject ResolutionIntent
         {
-            get
-            {
-                return _sessionState.Call<AndroidJavaObject>("resolutionIntent");
-            }
+            get { return _sessionState.Call<AndroidJavaObject>("resolutionIntent"); }
         }
-        
-        
+
+
         public int SessionId
         {
-            get
-            {
-                return _sessionState.Call<int>("sessionId");
-            }
+            get { return _sessionState.Call<int>("sessionId"); }
         }
-        
-        
+
+
         public int Status
         {
-            get
-            {
-                return _sessionState.Call<int>("status");
-            }
+            get { return _sessionState.Call<int>("status"); }
         }
-        
-        public int TotalBytesToDownload
+
+        public long TotalBytesToDownload
         {
-            get
-            {
-                return _sessionState.Call<int>("totalBytesToDownload");
-            }
+            get { return _sessionState.Call<long>("totalBytesToDownload"); }
         }
-        
+
         public SplitInstallSessionState(AndroidJavaObject sessionState)
         {
             _sessionState = sessionState;

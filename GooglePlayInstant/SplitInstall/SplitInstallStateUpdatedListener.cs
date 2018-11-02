@@ -19,20 +19,30 @@ using UnityEngine;
 
 namespace GooglePlayInstant.SplitInstall
 {
-
     public class SplitInstallStateUpdatedListener : AndroidJavaProxy
     {
-        public event Action<SplitInstallSessionState> OnStateUpdateEvent = delegate{};
-        
-        public SplitInstallStateUpdatedListener() : base("com.google.android.play.core.splitinstall.SplitInstallStateUpdatedListener"){ }
+        public event Action<SplitInstallSessionState> OnStateUpdateEvent = delegate { };
 
-        public override AndroidJavaObject Invoke(string methodName, AndroidJavaObject[] javaArgs)
+        public SplitInstallStateUpdatedListener() : base(
+            "com.google.android.play.core.splitinstall.SplitInstallStateUpdatedListener")
         {
-            if (methodName == "onStateUpdate")
-            {
-                OnStateUpdateEvent.Invoke(new SplitInstallSessionState(javaArgs[0]));
-            }
-            return null;
+        }
+
+        // Proxied java calls. Method names are camelCase to match the corresponding java methods.
+
+        public void onStateUpdate(AndroidJavaObject splitInstallSessionState)
+        {
+            OnStateUpdateEvent.Invoke(new SplitInstallSessionState(splitInstallSessionState));
+        }
+
+        public int hashCode()
+        {
+            return GetHashCode();
+        }
+
+        public string toString()
+        {
+            return "SplitInstallStateUpdatedListener";
         }
     }
 }

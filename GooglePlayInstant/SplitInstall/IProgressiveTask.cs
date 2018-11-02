@@ -13,17 +13,17 @@
 // limitations under the License.
 
 using UnityEngine;
+using UnityEngine.Networking;
 
-namespace GooglePlayInstant.SplitInstall
+#if !UNITY_2017_2_OR_NEWER
+using System.IO;
+#endif
+
+namespace GooglePlayInstant
 {
-    /// <summary>
-    /// Provides methods to obtain an AssetBundle
-    /// </summary>
-    public interface IAssetBundleProvider
+    public interface IProgressiveTask
     {
-        IProgressiveTask StartDownload();
-        bool IsError();
-        string GetError();
-        AssetBundle GetAssetBundle();
+        float GetProgress();
+        bool IsDone();
     }
 }

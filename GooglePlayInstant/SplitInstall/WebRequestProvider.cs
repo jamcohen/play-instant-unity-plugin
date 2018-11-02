@@ -25,13 +25,13 @@ namespace GooglePlayInstant.SplitInstall
     {
         private readonly string _assetBundleUrl;
         private UnityWebRequest _webRequest; // TODO: Provide a method to dispose this request.
-        
+
         public WebRequestProvider(string assetBundleUrl)
         {
             _assetBundleUrl = assetBundleUrl;
         }
-        
-        public AsyncOperation StartDownload()
+
+        public IProgressiveTask StartDownload()
         {
             if (_webRequest != null)
             {
@@ -44,7 +44,9 @@ namespace GooglePlayInstant.SplitInstall
 #else
             _webRequest = UnityWebRequest.GetAssetBundle(_assetBundleUrl);
 #endif
-            return GooglePlayInstantUtils.SendWebRequest(_webRequest);
+
+            var downloadOperation = GooglePlayInstantUtils.SendWebRequest(_webRequest);
+            return new WebRequestTask(downloadOperation);
         }
 
         public bool IsError()
@@ -60,6 +62,26 @@ namespace GooglePlayInstant.SplitInstall
         public AssetBundle GetAssetBundle()
         {
             return DownloadHandlerAssetBundle.GetContent(_webRequest);
+        }
+    }
+
+    public class WebRequestTask : IProgressiveTask
+    {
+        private readonly AsyncOperation _downloadOperation;
+
+        public WebRequestTask(AsyncOperation downloadOperation)
+        {
+            _downloadOperation = downloadOperation;
+        }
+
+        public float GetProgress()
+        {
+            return _downloadOperation.progress;
+        }
+
+        public bool IsDone()
+        {
+            return _downloadOperation.isDone;
         }
     }
 }

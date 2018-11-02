@@ -21,47 +21,43 @@ using UnityEngine;
 
 namespace GooglePlayInstant.SplitInstall
 {
-
     public class SplitInstallManager
     {
         private AndroidJavaObject _splitInstallManager;
         private SplitInstallStateUpdatedListener _listener;
-        
-        private void Start()
-        {
-            _listener = new SplitInstallStateUpdatedListener();
-            _listener.OnStateUpdateEvent += (s) => { Debug.LogFormat("Got an update"); };
-            var numberOfModules = GetNumberOfInstalledModules();
-            Debug.Log("Modules count: "+numberOfModules);
 
-            StartModuleInstall("com.notAModule.test");
-        }
-        
         public int GetNumberOfInstalledModules()
         {
             var splitInstallManager = GetSplitInstallManager();
-            var installedModuleNames = splitInstallManager.Call<AndroidJavaObject>("getInstalledModules"); // returns Set<string>
+            var installedModuleNames =
+                splitInstallManager.Call<AndroidJavaObject>("getInstalledModules"); // returns Set<string>
             int numberOfModules = installedModuleNames.Call<int>("size");
             return numberOfModules;
         }
 
-        public AsyncOperation StartModuleInstall(params string[] moduleNames)
+        public SplitInstallStateUpdatedListener StartModuleInstall(params string[] moduleNames)
         {
             var request = BuildSplitInstallRequest(moduleNames);
             var splitInstallManager = GetSplitInstallManager();
 
+            _listener = new SplitInstallStateUpdatedListener();
             splitInstallManager.Call("registerListener", _listener);
-            splitInstallManager.Call<AndroidJavaClass>("startInstall", request);
+            splitInstallManager.Call<AndroidJavaObject>("startInstall",
+                request); // TODO: Manage the task this method returns.
+
+            return _listener;
         }
-        
+
         // Returns a SplitInstallRequest.
         public AndroidJavaObject BuildSplitInstallRequest(params string[] moduleNames)
         {
-            var splitInstallRequestClass= new AndroidJavaClass("com.google.android.play.core.splitinstall.SplitInstallRequest");
+            var splitInstallRequestClass =
+                new AndroidJavaClass("com.google.android.play.core.splitinstall.SplitInstallRequest");
             var splitSplitInstallRequestBuilder = splitInstallRequestClass.CallStatic<AndroidJavaObject>("newBuilder");
             foreach (var moduleName in moduleNames)
             {
-                splitSplitInstallRequestBuilder = splitSplitInstallRequestBuilder.Call<AndroidJavaObject>("addModule", moduleName);
+                splitSplitInstallRequestBuilder =
+                    splitSplitInstallRequestBuilder.Call<AndroidJavaObject>("addModule", moduleName);
             }
 
             var splitInstallRequest = splitSplitInstallRequestBuilder.Call<AndroidJavaObject>("build");
@@ -77,9 +73,10 @@ namespace GooglePlayInstant.SplitInstall
 
             string factoryClassName = "com.google.android.play.core.splitinstall.SplitInstallManagerFactory";
             var activity = UnityPlayerHelper.GetCurrentActivity();
-            using(var splitInstallManagerFactory = new AndroidJavaClass(factoryClassName))
+            using (var splitInstallManagerFactory = new AndroidJavaClass(factoryClassName))
             {
-                return splitInstallManagerFactory.CallStatic<AndroidJavaObject>("create", activity);
+                _splitInstallManager = splitInstallManagerFactory.CallStatic<AndroidJavaObject>("create", activity);
+                return _splitInstallManager;
             }
         }
     }

@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -83,17 +84,24 @@ namespace GooglePlayInstant.LoadingScreen
         public IEnumerator FillUntilDone(AsyncOperation operation, float startingFillProportion,
             float endingFillProportion, bool skipFinalUpdate)
         {
+            yield return FillUntilDone(() => operation.isDone, () => operation.progress, startingFillProportion,
+                endingFillProportion, skipFinalUpdate);
+        }
+
+        public IEnumerator FillUntilDone(Func<bool> getIsDone, Func<float> getProgress, float startingFillProportion,
+            float endingFillProportion, bool skipFinalUpdate)
+        {
             var previousFillProportion = startingFillProportion;
             var isDone = false;
             while (!isDone)
             {
-                if (operation.isDone)
+                if (getIsDone())
                 {
                     isDone = true;
                 }
                 else
                 {
-                    var fillProportion = Mathf.Lerp(startingFillProportion, endingFillProportion, operation.progress);
+                    var fillProportion = Mathf.Lerp(startingFillProportion, endingFillProportion, getProgress());
                     fillProportion = Mathf.Max(previousFillProportion, fillProportion); // Progress can only increase.
                     SetProgress(fillProportion);
                     previousFillProportion = fillProportion;
@@ -104,11 +112,10 @@ namespace GooglePlayInstant.LoadingScreen
 
             if (!skipFinalUpdate)
             {
-                var finalFillProportion = Mathf.Lerp(startingFillProportion, endingFillProportion, operation.progress);
+                var finalFillProportion = Mathf.Lerp(startingFillProportion, endingFillProportion, getProgress());
                 finalFillProportion = Mathf.Max(previousFillProportion, finalFillProportion);
                 SetProgress(finalFillProportion);
             }
         }
-
     }
 }

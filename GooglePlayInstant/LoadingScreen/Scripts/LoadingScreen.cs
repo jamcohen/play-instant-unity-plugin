@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System.Collections;
+using GooglePlayInstant.SplitInstall;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
@@ -25,8 +26,13 @@ namespace GooglePlayInstant.LoadingScreen
     /// </summary>
     public class LoadingScreen : MonoBehaviour
     {
+        public bool DownloadAssetBundleViaSplit = true;
+
         [Tooltip("The url used to fetch the AssetBundle on Start")]
         public string AssetBundleUrl;
+
+        [Tooltip("The name of the split containing the AssetBundle")]
+        public string AssetBundleSplitName;
 
         [Tooltip("The LoadingBar used to indicated download and install progress")]
         public LoadingBar LoadingBar;
@@ -104,20 +110,30 @@ namespace GooglePlayInstant.LoadingScreen
 
         private IEnumerator GetAssetBundle(string assetBundleUrl)
         {
-            UnityWebRequest webRequest;
-            var downloadOperation = StartAssetBundleDownload(assetBundleUrl, out webRequest);
-
-            yield return LoadingBar.FillUntilDone(downloadOperation,
-                _maxLoadingBarProgress, LoadingBar.AssetBundleDownloadToInstallRatio, true);
-
-            if (GooglePlayInstantUtils.IsNetworkError(webRequest))
+            IAssetBundleProvider provider;
+            if (DownloadAssetBundleViaSplit)
             {
-                _maxLoadingBarProgress = LoadingBar.Progress;
-                Debug.LogFormat("Failed to download AssetBundle: {0}", webRequest.error);
+                provider = new SplitInstallProvider(AssetBundleSplitName);
             }
             else
             {
-                _bundle = DownloadHandlerAssetBundle.GetContent(webRequest);
+                provider = new WebRequestProvider(assetBundleUrl);
+            }
+
+            var progressiveTask = provider.StartDownload();
+
+            yield return LoadingBar.FillUntilDone(progressiveTask.IsDone, progressiveTask.GetProgress,
+                _maxLoadingBarProgress, LoadingBar.AssetBundleDownloadToInstallRatio, true);
+
+            if (provider.IsError())
+            {
+                _maxLoadingBarProgress = LoadingBar.Progress;
+                Debug.LogFormat("Failed to download AssetBundle: {0}", provider.GetError());
+            }
+            else
+            {
+                Debug.Log("Finished download");
+                _bundle = provider.GetAssetBundle();
             }
         }
 

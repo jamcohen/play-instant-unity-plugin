@@ -153,7 +153,9 @@ namespace GooglePlayInstant.Editor
 //            }
 
             // TODO: replace temp file with asset bundle
-            File.WriteAllText(Path.Combine(assetsDirectoryPath, "file.txt"), "Hello!");
+            var config = new QuickDeployConfig();
+            config.LoadConfiguration();
+            File.Copy(config.AssetBundleFileName, Path.Combine(assetsDirectoryPath, "assetBundle"));
 
             var sourceDirectoryInfo = featureDirectoryInfo.CreateSubdirectory("source");
             var destinationDirectoryInfo = featureDirectoryInfo.CreateSubdirectory("destination");
